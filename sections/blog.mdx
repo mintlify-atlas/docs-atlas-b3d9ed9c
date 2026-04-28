@@ -1,0 +1,99 @@
+---
+title: "Blog section — journal and notes card grid"
+description: "The BlogSection component: three article preview cards with tinted category badges, serif titles, excerpt text, and Calendar and Clock metadata."
+keywords: ["blog", "journal", "article cards", "category tint", "read more"]
+---
+
+The `BlogSection` component renders a centered 3-column grid of article preview cards. Each card shows a tinted category badge, a serif title, an excerpt, a metadata row with date and read time, and a "read more" link.
+
+## Blog posts
+
+The `blogPosts` array in `BlogSection.tsx` defines all three current entries:
+
+```ts
+const blogPosts = [
+  {
+    title:    "building scalable react apps with modern architecture",
+    excerpt:  "how to structure react projects for scale, maintainability & performance — with the patterns i actually use.",
+    date:     "Mar 15, 2026",
+    readTime: "8 min read",
+    category: "react",
+    tint:     "bg-primary/20 text-primary",
+  },
+  {
+    title:    "the future of CSS: what's coming in 2026",
+    excerpt:  "container queries, scroll-driven animations & the new CSS sugar landing in browsers this year.",
+    date:     "Feb 28, 2026",
+    readTime: "6 min read",
+    category: "css",
+    tint:     "bg-pop/20 text-pop",
+  },
+  {
+    title:    "from junior to senior: 5 years of lessons",
+    excerpt:  "milestones, mistakes, and the small breakthroughs that quietly shaped my dev journey.",
+    date:     "Jan 10, 2026",
+    readTime: "10 min read",
+    category: "career",
+    tint:     "bg-accent/30 text-accent-foreground",
+  },
+];
+```
+
+## Card anatomy
+
+Each card is an `<article>` element with `glass rounded-[2rem] p-7 hover-lift flex flex-col gap-4`.
+
+From top to bottom:
+
+1. **Category badge** — `self-start text-xs font-medium px-3 py-1 rounded-full` span with the `tint` classes applied
+2. **Title** — `font-serif text-2xl leading-snug`, transitions to `text-pop` on group hover
+3. **Excerpt** — `text-sm text-muted-foreground leading-relaxed flex-1`
+4. **Metadata row** — `flex items-center justify-between`, `border-t border-foreground/5`:
+   - Left: `<Calendar />` icon + date string
+   - Right: `<Clock />` icon + read time string
+5. **"read more" link** — `text-pop` anchor with `<ArrowRight />` icon that translates right on group hover
+
+## Tint color classes
+
+| Category | Tint classes |
+|----------|-------------|
+| `react` | `bg-primary/20 text-primary` |
+| `css` | `bg-pop/20 text-pop` |
+| `career` | `bg-accent/30 text-accent-foreground` |
+
+Add new categories by choosing a `bg-{color}/{opacity} text-{color}` pair from the theme.
+
+## How to add a blog post
+
+Append a new object to the `blogPosts` array:
+
+```ts
+{
+  title:    "your post title",
+  excerpt:  "a one or two sentence teaser.",
+  date:     "Apr 28, 2026",
+  readTime: "5 min read",
+  category: "tooling",
+  tint:     "bg-sage/25 text-sage-foreground",
+},
+```
+
+## Wiring up real routes
+
+All "read more" links currently have `href="#"`:
+
+```tsx
+<a href="#" className="inline-flex items-center gap-1.5 text-sm font-medium text-pop …">
+  read more <ArrowRight … />
+</a>
+```
+
+To link to real content, add a `slug` field to each `blogPosts` entry and replace `"#"` with the resolved path:
+
+```tsx
+<a href={`/blog/${post.slug}`} …>
+```
+
+<Warning>
+Until real routes exist, avoid changing these links to external URLs without first confirming the target pages are live and indexed correctly.
+</Warning>

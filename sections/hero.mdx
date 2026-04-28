@@ -1,0 +1,116 @@
+---
+title: "Hero section — animated portfolio intro banner"
+description: "The HeroSection component: floating blob background, script greeting, serif headline, two CTA buttons, and a row of status sticker badges."
+keywords: ["hero", "banner", "CTA", "blob", "animation", "sticker"]
+---
+
+The `HeroSection` component is the first thing visitors see. It fills the full viewport with an animated gradient background, three layered floating blobs, a script greeting, a large serif headline, a tagline paragraph, two call-to-action buttons, and a row of "currently" status stickers.
+
+## What it displays
+
+The section renders several visual layers stacked on a `bg-gradient-hero` background:
+
+**Floating blobs** — three large, blurred, animated circles that drift slowly around the background:
+
+| Blob | Size | Position | Color |
+|------|------|----------|-------|
+| 1 | 420 × 420 px | top-left | `bg-pop/40` |
+| 2 | 500 × 500 px | top-right | `bg-primary/30` |
+| 3 | 360 × 360 px | bottom-center | `bg-accent/40` |
+
+**Decorative sticker overlays** — two floating sticker badges visible on `md` screens and wider:
+- `designer + dev` (top-right, rotated 6°, star icon)
+- `based in the cloud ☁️` (bottom-left, rotated -6°, sparkles icon)
+
+**Headline block** — the script greeting `hi, lovelies ♡` renders above the main `<h1>`. The heading reads:
+
+```
+i'm Vaishali
+a full-stack dreamer.
+```
+
+`Vaishali` uses the `text-gradient italic` style; `a full-stack` has a squiggle underline decoration; `dreamer.` uses the `marquee-text` class.
+
+**Tagline** — a short paragraph beneath the heading:
+
+> i build soft, thoughtful, lovable web experiences — somewhere between code, color theory, and a really good playlist.
+
+**"Currently" status row** — a label and three sticker badges at the bottom of the content block:
+
+- `🎧 lo-fi loops`
+- `📚 design systems`
+- `🌸 spring drops`
+
+## CTA buttons
+
+Two anchor buttons sit below the tagline:
+
+<CodeGroup>
+```tsx hero-cta
+<div
+  className="flex flex-wrap gap-4 animate-fade-in-up"
+  style={{ animationDelay: "0.4s" }}
+>
+  <a
+    href="#projects"
+    className="group inline-flex items-center gap-2 px-7 py-4 rounded-full bg-foreground text-background font-medium hover:bg-pop transition-all duration-500 hover:-translate-y-0.5 shadow-card"
+  >
+    peek my work
+    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+  </a>
+  <a
+    href="#contact"
+    className="group inline-flex items-center gap-2 px-7 py-4 rounded-full glass text-foreground font-medium hover:bg-white transition-all duration-500 hover:-translate-y-0.5"
+  >
+    say hi <Mail size={18} className="text-pop" />
+  </a>
+</div>
+```
+</CodeGroup>
+
+| Button | Label | Target | Style |
+|--------|-------|--------|-------|
+| Primary | "peek my work" | `#projects` | Solid foreground fill, hover turns `bg-pop` |
+| Secondary | "say hi" | `#contact` | Glassmorphism (`glass`), mail icon in `text-pop` |
+
+## How to customize
+
+### Change the name
+
+The name is hardcoded in the `<h1>` tag at `HeroSection.tsx:37`. Replace `Vaishali` with the desired name:
+
+```tsx
+i'm <span className="text-gradient italic">Vaishali</span>
+```
+
+### Change the tagline
+
+The role line `a full-stack dreamer` is split across two spans at lines 40–42. Edit the text inside the `squiggle-underline` span and the `marquee-text` span directly.
+
+### Change blob colors
+
+Each blob's color is a Tailwind utility on the `<div>` at lines 10–12. Swap the color token to any theme color with an opacity modifier:
+
+```tsx
+<div className="blob blob-animate w-[420px] h-[420px] -top-20 -left-20 bg-pop/40" />
+```
+
+Replace `bg-pop/40` with e.g. `bg-accent/50` or any custom color class.
+
+### Change CTA text or destinations
+
+Edit the `href` and link text in the two `<a>` elements shown in the code block above. Both are anchor links to section IDs on the same page.
+
+### Update the "currently" stickers
+
+The three sticker spans at lines 72–74 are plain JSX. Edit or add `<span className="sticker">` elements in that row:
+
+```tsx
+<span className="sticker">🎧 lo-fi loops</span>
+<span className="sticker">📚 design systems</span>
+<span className="sticker">🌸 spring drops</span>
+```
+
+<Tip>
+The stagger animation delays on all child elements are controlled via inline `style={{ animationDelay: "..." }}`. Increase or decrease the delay values to tune the entrance sequence.
+</Tip>

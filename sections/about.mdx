@@ -1,0 +1,91 @@
+---
+title: "About section — bio and personal highlights grid"
+description: "The AboutSection component: two bio paragraphs, a glassmorphism quote card, and a 2x2 highlights grid with Lucide icons and color tokens."
+keywords: ["about", "bio", "highlights", "scroll reveal", "glassmorphism"]
+---
+
+The `AboutSection` component introduces Vaishali with two bio paragraphs, a featured quote rendered as a glassmorphism card, and a 2×2 grid of highlight cards — all revealed on scroll via the `useScrollReveal` hook.
+
+## Bio paragraphs
+
+The left column (spanning 3 of 5 grid columns on `md` screens) contains two paragraphs and one quote card:
+
+**Paragraph 1** — leads with the 5+ years of experience:
+
+> i'm a creative developer + designer with **5+ years** of shipping digital things that feel like a warm hug. i live for the moment a clunky idea becomes something soft, useful, and a little bit magical.
+
+**Paragraph 2** — describes the full-stack approach:
+
+> full-stack means i'm at home in the messy backend and the dreamy frontend — turning complex problems into simple, beautiful flows. i care about typography, micro-animations, and what happens between the clicks.
+
+**Featured quote card** — a `glass rounded-3xl` card with script font:
+
+> "the best interfaces feel like a friend handing you exactly what you need." ✨
+
+## Highlights grid
+
+The right column (2 of 5 grid columns) holds four cards in a `grid-cols-2` layout. Each card uses `glass rounded-3xl hover-lift` and reveals with a staggered `transitionDelay`.
+
+The `highlights` array at the top of `AboutSection.tsx`:
+
+```ts
+const highlights = [
+  { icon: Code2,   label: "clean code",     desc: "efficient, maintainable, kinda poetic",  color: "bg-primary/20 text-primary"          },
+  { icon: Palette, label: "design eye",      desc: "pixel-perfect, soft on the soul",        color: "bg-pop/20 text-pop"                  },
+  { icon: Zap,     label: "fast delivery",   desc: "agile but never rushed",                 color: "bg-accent/30 text-accent-foreground" },
+  { icon: Heart,   label: "good vibes",      desc: "kindness ships better products",         color: "bg-sage/30 text-sage-foreground"     },
+];
+```
+
+Each object has this shape:
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| `icon` | Lucide icon component | Rendered inside the colored icon container |
+| `label` | `string` | Card heading |
+| `desc` | `string` | Short descriptor below the heading |
+| `color` | `string` | Tailwind classes applied to the icon wrapper `div` |
+
+The icon container is a `w-10 h-10 rounded-2xl` div. The icon renders at `size={18}`.
+
+## Scroll reveal
+
+`AboutSection` uses the `useScrollReveal` hook:
+
+```tsx
+const { ref, isVisible } = useScrollReveal();
+```
+
+The `ref` is attached to the container `div`. When `isVisible` becomes `true`, the `visible` class is added to the `scroll-reveal` container, which triggers CSS transitions on all `.scroll-reveal-child` descendants. Each child also receives a staggered `transitionDelay` inline style:
+
+```tsx
+style={{ transitionDelay: `${0.15 * (i + 1)}s` }}
+```
+
+## How to customize
+
+### Edit the bio text
+
+The two `<p>` elements are hardcoded inside the component. Edit them directly in `AboutSection.tsx` at lines 29–38.
+
+### Add or modify highlight cards
+
+Add a new object to the `highlights` array. Choose any Lucide icon and a Tailwind color pair:
+
+```ts
+{ icon: Globe, label: "open source", desc: "giving back, one PR at a time", color: "bg-primary/20 text-primary" },
+```
+
+<Note>
+The grid is `grid-cols-2`. Adding a fifth card will leave an empty cell unless you change the grid to `grid-cols-3` or adjust the layout.
+</Note>
+
+### Change the featured quote
+
+Edit the text inside the `glass rounded-3xl` card at `AboutSection.tsx:40–43`:
+
+```tsx
+<p className="font-script text-2xl text-foreground/80">
+  "the best interfaces feel like a friend handing you exactly what you need." ✨
+</p>
+```

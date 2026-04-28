@@ -1,0 +1,107 @@
+---
+title: "Projects gallery — gradient cards with tech stack tags"
+description: "The ProjectsSection component: six glassmorphism cards with gradient thumbnails, emoji, description, tech stack tags, and action buttons."
+keywords: ["projects", "gallery", "gradient", "cards", "tech tags", "coming soon"]
+---
+
+The `ProjectsSection` component renders a responsive 3-column grid of glassmorphism project cards. Each card has a gradient thumbnail, an oversized emoji, a title, description, technology tags, and live preview / source buttons.
+
+## Projects
+
+The `projects` array in `ProjectsSection.tsx` defines all six entries:
+
+```ts
+const projects = [
+  {
+    title:    "E-Commerce Platform",
+    desc:     "modern e-comm with real-time inventory, payments, and a dreamy admin dashboard.",
+    tags:     ["React", "Node.js", "PostgreSQL"],
+    gradient: "from-pop/40 to-primary/30",
+    emoji:    "🛍️",
+  },
+  {
+    title:    "AI Chat Application",
+    desc:     "an intelligent chatbot interface powered by ML & natural language magic.",
+    tags:     ["Next.js", "Python", "OpenAI"],
+    gradient: "from-primary/40 to-accent/40",
+    emoji:    "🤖",
+  },
+  {
+    title:    "Task Management App",
+    desc:     "a collaborative project tool with real-time updates and team features.",
+    tags:     ["TypeScript", "Firebase", "Tailwind"],
+    gradient: "from-accent/40 to-sage/40",
+    emoji:    "✅",
+  },
+  {
+    title:    "Portfolio Generator",
+    desc:     "a tool that helps devs spin up stunning portfolio sites in minutes.",
+    tags:     ["React", "Framer Motion", "MDX"],
+    gradient: "from-sage/40 to-primary/40",
+    emoji:    "🎨",
+  },
+  {
+    title:    "Health & Fitness Tracker",
+    desc:     "mobile-first fitness tracking with charts, goals, and social bits.",
+    tags:     ["React Native", "GraphQL", "MongoDB"],
+    gradient: "from-primary/40 to-pop/40",
+    emoji:    "🌿",
+  },
+  {
+    title:    "Social Media Dashboard",
+    desc:     "analytics dashboard for managing & tracking social performance.",
+    tags:     ["Vue.js", "D3.js", "Express"],
+    gradient: "from-pop/40 to-accent/40",
+    emoji:    "📊",
+  },
+];
+```
+
+## Card anatomy
+
+Each card is a `glass rounded-[2rem] overflow-hidden hover-lift` container. It has two regions:
+
+**Thumbnail (`h-48`)** — a `bg-gradient-to-br` div using the project's `gradient` value. The emoji sits centered at `text-7xl` and scales + rotates on group hover. A "coming soon" sticker badge is pinned to the top-right corner of every card.
+
+<Note>
+All six cards currently show a `coming soon` sticker. Remove the sticker span inside the thumbnail `div` once a project goes live.
+</Note>
+
+**Body (`p-6`)** — contains:
+- `font-serif text-2xl` title
+- `text-sm text-muted-foreground` description
+- Tag pills: `text-[11px] px-2.5 py-1 rounded-full bg-foreground/5 text-foreground/70`
+- Action row: "live preview" (ExternalLink icon, `text-pop`) and "source" (Github icon, `text-muted-foreground`)
+
+The two action buttons are currently `<button>` elements with no `onClick` or `href`. Wire them up before launching.
+
+## Gradient config
+
+The `gradient` field is a Tailwind `bg-gradient-to-br` value. It uses theme color tokens with opacity modifiers:
+
+| Gradient value | Colors |
+|----------------|--------|
+| `from-pop/40 to-primary/30` | pop → primary |
+| `from-primary/40 to-accent/40` | primary → accent |
+| `from-accent/40 to-sage/40` | accent → sage |
+| `from-sage/40 to-primary/40` | sage → primary |
+| `from-primary/40 to-pop/40` | primary → pop |
+| `from-pop/40 to-accent/40` | pop → accent |
+
+Swap tokens freely as long as they exist in the Tailwind theme config.
+
+## How to add a new project
+
+Add a new object to the `projects` array in `ProjectsSection.tsx`:
+
+```ts
+{
+  title:    "Your Project Name",
+  desc:     "One or two sentence description of what it does.",
+  tags:     ["Tech", "Stack", "Here"],
+  gradient: "from-accent/40 to-pop/40",
+  emoji:    "🚀",
+},
+```
+
+The grid handles layout automatically. On wide screens cards fill 3 columns; on `sm` screens 2 columns; on mobile 1 column.

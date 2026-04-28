@@ -1,0 +1,113 @@
+---
+title: "Local development setup for Vaishali Visions"
+description: "Set up Vaishali Visions for local development: Node 18+ prerequisites, npm or bun install, dev server at port 8080, path aliases, and available scripts."
+---
+
+Vaishali Visions is a Vite + React + TypeScript project. This guide walks you through cloning the repository and running the development server on your machine.
+
+## Prerequisites
+
+- **Node.js 18 or later** — the project uses ES modules (`"type": "module"`) and Vite 5, both of which require Node 18+.
+- **npm** (bundled with Node) or **Bun** as an alternative package manager.
+- **Git** to clone the repository.
+
+Verify your Node version before starting:
+
+```bash
+node --version
+# v18.0.0 or higher
+```
+
+## Getting started
+
+<Steps>
+  <Step title="Clone the repository">
+
+```bash
+git clone https://github.com/gladis-git-bit/vaishali-visions.git
+cd vaishali-visions
+```
+
+  </Step>
+  <Step title="Install dependencies">
+
+Choose your preferred package manager:
+
+<CodeGroup>
+
+```bash npm
+npm install
+```
+
+```bash bun
+bun install
+```
+
+</CodeGroup>
+
+  </Step>
+  <Step title="Start the development server">
+
+<CodeGroup>
+
+```bash npm
+npm run dev
+```
+
+```bash bun
+bun run dev
+```
+
+</CodeGroup>
+
+The server starts on **port 8080** and listens on all network interfaces (`host: "::"`). Open [http://localhost:8080](http://localhost:8080) in your browser.
+
+Hot module replacement (HMR) is enabled. The error overlay is disabled by default — check the browser console for runtime errors.
+
+  </Step>
+</Steps>
+
+## Available scripts
+
+All scripts are defined in `package.json` and can be run with `npm run <script>` or `bun run <script>`.
+
+| Script | Command | Description |
+|---|---|---|
+| `dev` | `vite` | Start the dev server at `localhost:8080` with HMR. |
+| `build` | `vite build` | Production build — outputs to `dist/`. |
+| `build:dev` | `vite build --mode development` | Build in development mode (source maps, no minification). |
+| `preview` | `vite preview` | Locally preview the production `dist/` build. |
+| `lint` | `eslint .` | Lint all source files with ESLint. |
+| `test` | `vitest run` | Run the test suite once. |
+| `test:watch` | `vitest` | Run tests in watch mode. |
+
+## Path aliases
+
+The `@` alias is configured in `vite.config.ts` and resolves to `./src`:
+
+```typescript vite.config.ts
+resolve: {
+  alias: {
+    "@": path.resolve(__dirname, "./src"),
+  },
+},
+```
+
+Use `@/` instead of relative imports throughout the codebase — for example, `import { cn } from "@/lib/utils"`.
+
+## Peer dependency deduplication
+
+The Vite config deduplicates several packages to prevent multiple React instances at runtime:
+
+```typescript vite.config.ts
+dedupe: [
+  "react",
+  "react-dom",
+  "react/jsx-runtime",
+  "react/jsx-dev-runtime",
+  "@tanstack/react-query",
+  "@tanstack/query-core",
+],
+```
+
+If you add a library that bundles its own copy of React, this list ensures only one copy is loaded.

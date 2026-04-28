@@ -1,0 +1,80 @@
+{
+  "projectType": "frontend",
+  "projectName": "Vaishali Visions",
+  "projectDescription": "A personal portfolio and creative showcase for Vaishali, a full-stack developer and designer, built with React, TypeScript, and Tailwind CSS.",
+  "theme": "willow",
+  "primaryColor": "#c084e8",
+  "lightColor": "#f9d6f0",
+  "darkColor": "#3b1a5a",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Overview",
+        "groups": [
+          {
+            "group": "Introduction",
+            "pages": ["introduction", "getting-started"]
+          },
+          {
+            "group": "Portfolio Sections",
+            "pages": ["sections/hero", "sections/about", "sections/skills", "sections/experience", "sections/projects", "sections/blog", "sections/contact"]
+          }
+        ]
+      },
+      {
+        "tab": "Customization",
+        "groups": [
+          {
+            "group": "Theming & Styles",
+            "pages": ["customization/colors-and-typography", "customization/animations", "customization/layout"]
+          },
+          {
+            "group": "Content",
+            "pages": ["customization/updating-content", "customization/adding-projects", "customization/social-links"]
+          }
+        ]
+      },
+      {
+        "tab": "Development",
+        "groups": [
+          {
+            "group": "Setup",
+            "pages": ["development/local-setup", "development/project-structure"]
+          },
+          {
+            "group": "Components",
+            "pages": ["development/components-overview", "development/hooks"]
+          },
+          {
+            "group": "Deployment",
+            "pages": ["development/building-and-deploying"]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Animated hero section with floating blobs and sticker decorations",
+    "About section with highlight cards showcasing skills and values",
+    "Interactive skills showcase with color-coded technology badges",
+    "Work experience timeline with role and company details",
+    "Project gallery with gradient cards and tech stack tags",
+    "Blog/journal section with category-filtered post cards",
+    "Contact form with service offerings and submission handling",
+    "Responsive navbar with glassmorphism styling",
+    "Scroll-reveal animations using IntersectionObserver",
+    "Dreamy soft palette: lavender primary, peach accent, hot-pink pop"
+  ],
+  "publicApiSurface": [
+    "HeroSection — hero banner with name, tagline, and CTA buttons",
+    "AboutSection — bio, highlights grid with icons and descriptions",
+    "SkillsSection — dev and design skill badges with color palettes",
+    "ExperienceSection — work history cards with company, role, and period",
+    "ProjectsSection — project cards with gradient thumbnails, tags, and links",
+    "BlogSection — article cards with category, date, and read time",
+    "ContactSection — contact form and offered services list",
+    "Navbar — fixed glassmorphism nav with mobile menu",
+    "useScrollReveal — IntersectionObserver hook for reveal animations",
+    "Footer — site footer component"
+  ]
+}

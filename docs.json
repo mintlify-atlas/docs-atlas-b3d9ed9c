@@ -1,126 +1,90 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "name": "Vaishali Visions",
+  "theme": "willow",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#c084e8",
+    "light": "#f9d6f0",
+    "dark": "#3b1a5a"
   },
-  "favicon": "/favicon.svg",
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/gladis-git-bit/vaishali-visions"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/gladis-git-bit/vaishali-visions"
+    }
+  },
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Overview",
         "groups": [
           {
-            "group": "Getting started",
-            "pages": [
-              "index",
-              "quickstart",
-              "development"
-            ]
+            "group": "Introduction",
+            "pages": ["introduction", "getting-started"]
           },
           {
-            "group": "Customization",
+            "group": "Portfolio Sections",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/components",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "Agent ready",
-            "pages": [
-              "agent-ready/prompt",
-              "agent-ready/visibility",
-              "agent-ready/contextual",
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "sections/hero",
+              "sections/about",
+              "sections/skills",
+              "sections/experience",
+              "sections/projects",
+              "sections/blog",
+              "sections/contact"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Customization",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Theming & Styles",
             "pages": [
-              "api-reference/introduction"
+              "customization/colors-and-typography",
+              "customization/animations",
+              "customization/layout"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Content",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "customization/updating-content",
+              "customization/adding-projects",
+              "customization/social-links"
             ]
           }
         ]
-      }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
+      },
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "tab": "Development",
+        "groups": [
+          {
+            "group": "Setup",
+            "pages": [
+              "development/local-setup",
+              "development/project-structure"
+            ]
+          },
+          {
+            "group": "Components",
+            "pages": [
+              "development/components-overview",
+              "development/hooks"
+            ]
+          },
+          {
+            "group": "Deployment",
+            "pages": ["development/building-and-deploying"]
+          }
+        ]
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+    ]
   }
 }

@@ -1,0 +1,103 @@
+---
+title: "Skills section — tech badges and design toolkit"
+description: "The SkillsSection component: two categorized skill badge lists with a 5-entry color palette cycling system and hover micro-interactions."
+keywords: ["skills", "badges", "tech stack", "SkillBadge", "color palette"]
+---
+
+The `SkillsSection` component renders two labeled groups of pill-shaped skill badges — one for development tools and one for design tools. Badge colors cycle through a 5-entry palette and each badge lifts slightly on hover.
+
+## Skill groups
+
+The section heading reads **toolkit & toys** (section `—02`). Below it are two groups:
+
+### "for the building" — dev skills
+
+The `devSkills` array contains 12 entries:
+
+```ts
+const devSkills = [
+  "HTML", "CSS", "JavaScript", "TypeScript",
+  "React", "Next.js", "Node.js", "Express",
+  "PostgreSQL", "MongoDB", "Git", "Docker",
+];
+```
+
+### "for the pretty" — design skills
+
+The `designSkills` array contains 6 entries:
+
+```ts
+const designSkills = [
+  "Figma", "Adobe XD", "Tailwind CSS",
+  "Framer Motion", "UI/UX Design", "Responsive Design",
+];
+```
+
+## Color palettes
+
+A `palettes` array of 5 Tailwind class strings cycles badge colors via `idx % palettes.length`:
+
+```ts
+const palettes = [
+  "bg-primary/15 text-foreground border-primary/30 hover:bg-primary/30",
+  "bg-pop/15 text-foreground border-pop/30 hover:bg-pop/30",
+  "bg-accent/25 text-foreground border-accent/40 hover:bg-accent/40",
+  "bg-sage/25 text-foreground border-sage/40 hover:bg-sage/40",
+  "bg-secondary text-foreground border-border hover:bg-secondary/80",
+];
+```
+
+Dev badges start at `idx=0`; design badges start at `idx=2` (passed as `i + 2`), so the color sequences are offset from each other.
+
+## The SkillBadge component
+
+`SkillBadge` is a small inline component defined at the top of `SkillsSection.tsx`:
+
+```tsx
+const SkillBadge = ({ skill, delay, idx }: { skill: string; delay: number; idx: number }) => (
+  <span
+    className={`px-5 py-2.5 rounded-full text-sm font-medium border backdrop-blur-sm transition-all cursor-default scroll-reveal-child hover:-translate-y-1 hover:rotate-1 ${palettes[idx % palettes.length]}`}
+    style={{ transitionDelay: `${delay}s` }}
+  >
+    {skill}
+  </span>
+);
+```
+
+| Prop | Type | Purpose |
+|------|------|---------|
+| `skill` | `string` | Badge label text |
+| `delay` | `number` | Seconds of `transitionDelay` for the scroll-reveal entrance |
+| `idx` | `number` | Used to pick a palette via `idx % palettes.length` |
+
+The hover effect lifts the badge 1px (`hover:-translate-y-1`) and tilts it 1° (`hover:rotate-1`).
+
+## How to add or remove skills
+
+### Add a skill
+
+Append a string to either array in `SkillsSection.tsx`:
+
+```ts
+const devSkills = [
+  // existing skills…
+  "Prisma",
+];
+```
+
+```ts
+const designSkills = [
+  // existing skills…
+  "Spline",
+];
+```
+
+No other changes are needed — the component maps over both arrays automatically.
+
+### Remove a skill
+
+Delete the string from the array. The color cycling adjusts automatically because it uses the badge's index position.
+
+<Tip>
+If you add many skills and want the color sequence to feel more intentional, you can pass a fixed `idx` value instead of `i` when calling `SkillBadge` to pin a specific palette entry to a particular skill.
+</Tip>

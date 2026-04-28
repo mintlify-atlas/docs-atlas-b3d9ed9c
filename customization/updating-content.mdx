@@ -1,0 +1,99 @@
+---
+title: "Update your portfolio content — name, bio, and text"
+description: "Step-by-step guide to personalizing Vaishali Visions text: change the name, greeting, tagline, status stickers, bio paragraphs, and nav link labels."
+---
+
+Every piece of visible copy in Vaishali Visions lives directly in the component files — there is no CMS or separate data layer for text content. That makes personalizing the portfolio a straightforward find-and-replace across three files: `HeroSection.tsx`, `AboutSection.tsx`, and `Navbar.tsx`. The steps below walk through each editable text surface in the order a visitor encounters it.
+
+<Steps>
+  <Step title="Update your name in the hero">
+    Open `src/components/HeroSection.tsx` and find the `<span>` with the `text-gradient italic` class inside the `<h1>`. Replace `Vaishali` with your own name.
+
+    ```tsx src/components/HeroSection.tsx
+    <h1
+      className="font-serif text-5xl md:text-7xl lg:text-8xl mb-4 animate-fade-in-up leading-[1.05]"
+      style={{ animationDelay: "0.1s" }}
+    >
+      i'm <span className="text-gradient italic">Vaishali</span>
+      <br />
+      <span className="relative inline-block">
+        <span className="squiggle-underline">a full-stack</span>
+      </span>{" "}
+      <span className="marquee-text">dreamer.</span>
+    </h1>
+    ```
+
+    The `text-gradient` class applies the pink-to-purple CSS gradient defined in your global styles, so the gradient carries over automatically to whatever name you substitute.
+  </Step>
+
+  <Step title="Update the greeting and tagline">
+    Two more text nodes sit just above and below the `<h1>`. The script-font greeting is in a `<p>` above it; the short bio tagline is in a separate `<p>` below.
+
+    ```tsx src/components/HeroSection.tsx
+    <p className="font-script text-3xl md:text-4xl text-pop mb-2 animate-fade-in-up">
+      hi, lovelies ♡
+    </p>
+    ```
+
+    ```tsx src/components/HeroSection.tsx
+    <p
+      className="text-muted-foreground text-lg md:text-xl max-w-xl mt-8 mb-10 leading-relaxed animate-fade-in-up"
+      style={{ animationDelay: "0.3s" }}
+    >
+      i build soft, thoughtful, lovable web experiences — somewhere between code, color
+      theory, and a really good playlist.
+    </p>
+    ```
+
+    Edit the `hi, lovelies ♡` greeting, the `a full-stack` descriptor, the `dreamer.` marquee word, and the tagline paragraph to match your own voice and discipline.
+  </Step>
+
+  <Step title="Update status stickers">
+    Near the bottom of `HeroSection.tsx`, a flex row of `<span className="sticker">` elements shows what you are currently focused on. Replace the emoji and label text inside each span.
+
+    ```tsx src/components/HeroSection.tsx
+    <div className="flex flex-wrap items-center gap-3 mt-12 animate-fade-in-up" style={{ animationDelay: "0.5s" }}>
+      <span className="text-xs uppercase tracking-widest text-muted-foreground mr-2">currently</span>
+      <span className="sticker">🎧 lo-fi loops</span>
+      <span className="sticker">📚 design systems</span>
+      <span className="sticker">🌸 spring drops</span>
+    </div>
+    ```
+
+    You can add or remove `<span className="sticker">` elements freely — the `flex-wrap` layout reflows them automatically. The two floating decorative stickers (`designer + dev` and `based in the cloud ☁️`) earlier in the file follow the same pattern and can be updated the same way.
+  </Step>
+
+  <Step title="Update your bio">
+    Open `src/components/AboutSection.tsx`. The about section contains two prose paragraphs and a pull-quote card — all three are hardcoded strings.
+
+    ```tsx src/components/AboutSection.tsx
+    <p className="leading-relaxed text-xl text-foreground/80 scroll-reveal-child" style={{ transitionDelay: "0.1s" }}>
+      i'm a creative developer + designer with <span className="text-pop font-medium">5+ years</span> of
+      shipping digital things that feel like a warm hug. i live for the moment a clunky idea
+      becomes something soft, useful, and a little bit magical.
+    </p>
+    <p className="text-muted-foreground leading-relaxed scroll-reveal-child" style={{ transitionDelay: "0.2s" }}>
+      full-stack means i'm at home in the messy backend and the dreamy frontend — turning
+      complex problems into simple, beautiful flows. i care about typography, micro-animations,
+      and what happens between the clicks.
+    </p>
+    <div className="glass rounded-3xl p-6 scroll-reveal-child" style={{ transitionDelay: "0.3s" }}>
+      <p className="font-script text-2xl text-foreground/80">
+        "the best interfaces feel like a friend handing you exactly what you need." ✨
+      </p>
+    </div>
+    ```
+
+    Update the `5+ years` inline highlight, both paragraphs, and the quote string. The `<span className="text-pop font-medium">` wrapper can be reused on any short detail you want to emphasize in the brand pink.
+  </Step>
+
+  <Step title="Update nav links">
+    Open `src/components/Navbar.tsx`. The navigation items are defined as a single string array at the top of the file.
+
+    ```tsx src/components/Navbar.tsx
+    const navLinks = ["Home", "About", "Projects", "Blog", "Contact"];
+    ```
+
+    Each string is both the display label and the source of the `href` anchor — the component lowercases it automatically via `` href={`#${link.toLowerCase()}`} ``. Add, remove, or rename items here and both the desktop nav and mobile drawer will update. Make sure any new label matches the `id` on its corresponding `<section>` element.
+  </Step>
+</Steps>

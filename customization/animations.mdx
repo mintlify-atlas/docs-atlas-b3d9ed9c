@@ -1,0 +1,244 @@
+---
+title: "Animation system — blobs, reveals, and micro-interactions"
+description: "A guide to the Vaishali Visions animation system: CSS keyframes, scroll-reveal with IntersectionObserver, hover-lift, and blob-float."
+---
+
+Vaishali Visions uses two layers of animation: raw CSS keyframes and utility classes defined in `src/index.css`, and Tailwind-registered keyframes in `tailwind.config.ts`. The CSS layer handles scroll-driven reveals, ambient blob movement, and hover micro-interactions. The Tailwind layer provides composable `animate-*` utilities for component-level motion.
+
+## Blob animations
+
+Decorative background blobs use the `.blob-animate` class, which drives the `blob-float` keyframe. Each blob drifts in a slow, organic figure-eight path for a calm, depth-giving background effect.
+
+```css src/index.css
+@keyframes blob-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.08); }
+  66% { transform: translate(-20px, 30px) scale(0.95); }
+}
+
+.blob-animate {
+  animation: blob-float 18s ease-in-out infinite;
+}
+```
+
+The `.blob` base class positions each element absolutely, applies `border-radius: 50%`, a `blur(80px)` filter, and `opacity: 0.55` to keep it soft and non-distracting.
+
+```css src/index.css
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 0;
+}
+```
+
+<Tip>
+To make the blobs drift more dramatically, increase the translate values inside `blob-float`. To slow them down further, raise the `18s` duration on `.blob-animate`.
+</Tip>
+
+## Scroll-reveal system
+
+Elements that should animate in as the user scrolls start hidden and slide up into view when they enter the viewport. The system is driven by an `IntersectionObserver` that adds the `.visible` class once an element crosses the scroll threshold.
+
+There are two variants:
+
+- `.scroll-reveal` — for top-level container elements (larger initial offset, 0.9s transition)
+- `.scroll-reveal-child` — for nested children inside a `.scroll-reveal` container (smaller offset, 0.7s transition)
+
+```css src/index.css
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-reveal-child {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal.visible .scroll-reveal-child {
+  opacity: 1;
+  transform: translateY(0);
+}
+```
+
+The easing curve `cubic-bezier(0.16, 1, 0.3, 1)` is an expo-out curve — it snaps quickly off the start and decelerates gracefully, giving reveals a natural, springy feel.
+
+<Note>
+The `.visible` class is applied by an `IntersectionObserver` in the component layer, not by CSS alone. Make sure any new sections that use `.scroll-reveal` are registered with the observer in the component that mounts them.
+</Note>
+
+## hover-lift utility
+
+The `.hover-lift` class gives interactive cards and images a subtle lift-and-tilt on hover, reinforcing depth without a large visual jump.
+
+```css src/index.css
+.hover-lift {
+  @apply transition-all duration-500;
+}
+.hover-lift:hover {
+  transform: translateY(-6px) rotate(-0.5deg);
+  box-shadow: var(--shadow-soft);
+}
+```
+
+The `translateY(-6px)` lifts the element 6 px and the `rotate(-0.5deg)` adds a barely-perceptible counter-clockwise tilt. The `--shadow-soft` shadow (`0 20px 60px -20px hsl(335 60% 70% / 0.25), 0 8px 20px -8px hsl(268 50% 60% / 0.15)`) extends downward to reinforce the sense of elevation.
+
+## Tailwind keyframes
+
+The following keyframes are registered in `tailwind.config.ts` and available as `animate-*` Tailwind utilities.
+
+```ts tailwind.config.ts
+keyframes: {
+  "fade-in-up": {
+    from: { opacity: "0", transform: "translateY(30px)" },
+    to: { opacity: "1", transform: "translateY(0)" },
+  },
+  "float": {
+    "0%, 100%": { transform: "translateY(0)" },
+    "50%": { transform: "translateY(-12px)" },
+  },
+  "spin-slow": {
+    from: { transform: "rotate(0deg)" },
+    to: { transform: "rotate(360deg)" },
+  },
+  "accordion-down": {
+    from: { height: "0" },
+    to: { height: "var(--radix-accordion-content-height)" },
+  },
+  "accordion-up": {
+    from: { height: "var(--radix-accordion-content-height)" },
+    to: { height: "0" },
+  },
+},
+animation: {
+  "fade-in-up": "fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+  "float": "float 5s ease-in-out infinite",
+  "spin-slow": "spin-slow 20s linear infinite",
+  "accordion-down": "accordion-down 0.2s ease-out",
+  "accordion-up": "accordion-up 0.2s ease-out",
+},
+```
+
+<AccordionGroup>
+  <Accordion title="animate-fade-in-up">
+    Slides an element from 30 px below and fades it in over 0.8 s using the expo-out curve. Plays once and holds the final state (`forwards` fill mode). Used for hero headings and primary CTAs that should animate on initial page load.
+  </Accordion>
+  <Accordion title="animate-float">
+    Gently bobs an element 12 px up and back over a 5 s loop. Applied to floating decorative images and icon badges.
+  </Accordion>
+  <Accordion title="animate-spin-slow">
+    Rotates an element a full 360° continuously over 20 s at a constant speed (`linear`). Used on circular decorative rings and orbit paths.
+  </Accordion>
+  <Accordion title="animate-accordion-down / animate-accordion-up">
+    Height-based open/close transitions for Radix UI accordion content panels. Each runs for 0.2 s with an ease-out curve. These are provided by the `tailwindcss-animate` plugin integration.
+  </Accordion>
+</AccordionGroup>
+
+## animate-wiggle
+
+The `wiggle` keyframe is defined in `src/index.css` and is used specifically on the Sparkles icon in the Navbar to draw attention to the navigation element on idle.
+
+```css src/index.css
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+.animate-wiggle {
+  animation: wiggle 2.5s ease-in-out infinite;
+}
+```
+
+The icon rocks ±3° over a 2.5 s cycle, making it feel lively without being distracting.
+
+## animate-marquee
+
+Horizontally scrolling text tracks use the `marquee` keyframe. The animation slides the element left by exactly 50% of its own width over 30 s, creating a seamless loop when the content is duplicated.
+
+```css src/index.css
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+```
+
+<Info>
+The marquee technique requires the inner text content to be duplicated so that as the first copy exits left, the second copy fills in from the right with no gap. A 30 s duration works well for medium-length strings; shorten it for fewer words or lengthen it for longer tracks.
+</Info>
+
+## Adjusting animation speed
+
+Every duration value is a plain CSS time value. To make the site feel snappier or more relaxed, edit the relevant values directly.
+
+<CodeGroup>
+
+```css Slower blob drift (24s)
+/* src/index.css */
+.blob-animate {
+  animation: blob-float 24s ease-in-out infinite;
+}
+```
+
+```css Faster scroll-reveal (0.5s)
+/* src/index.css */
+.scroll-reveal {
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+```
+
+```ts Faster float (2s)
+// tailwind.config.ts
+animation: {
+  "float": "float 2s ease-in-out infinite",
+},
+```
+
+</CodeGroup>
+
+## Disabling animations for reduced-motion preferences
+
+Add a `prefers-reduced-motion` media query to `src/index.css` to respect the operating-system accessibility setting. Place it after the existing utility definitions.
+
+```css src/index.css
+@media (prefers-reduced-motion: reduce) {
+  .blob-animate,
+  .animate-wiggle,
+  .animate-marquee {
+    animation: none;
+  }
+
+  .scroll-reveal,
+  .scroll-reveal-child {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .hover-lift {
+    transition: none;
+  }
+
+  .hover-lift:hover {
+    transform: none;
+  }
+}
+```
+
+<Warning>
+Without a `prefers-reduced-motion` override, users who have enabled "Reduce motion" in their OS accessibility settings will still see all animations. Adding this block is a strong accessibility recommendation.
+</Warning>

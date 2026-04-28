@@ -1,0 +1,125 @@
+---
+title: "Components overview — sections and UI primitives"
+description: "A reference for every component in Vaishali Visions: seven portfolio sections, Navbar, Footer with social icons, and the shadcn/ui primitive library."
+---
+
+Vaishali Visions is composed of seven full-page section components, a persistent navigation bar, a footer, and a library of shadcn/ui primitives. All components live under `src/components/`.
+
+## Section components
+
+The portfolio page is a single scrollable document. Each section is a standalone React component rendered in order inside `src/pages/Index.tsx`. The table below maps each component to its file and in-page anchor.
+
+| Component | File | Anchor | Description |
+|---|---|---|---|
+| `HeroSection` | `src/components/HeroSection.tsx` | `#home` | Full-screen landing area with name, title, and call-to-action. |
+| `AboutSection` | `src/components/AboutSection.tsx` | `#about` | Personal bio, photo, and background summary. |
+| `SkillsSection` | `src/components/SkillsSection.tsx` | — | Visual display of technical skills and proficiency levels. |
+| `ExperienceSection` | `src/components/ExperienceSection.tsx` | — | Timeline or list of work experience entries. |
+| `ProjectsSection` | `src/components/ProjectsSection.tsx` | `#projects` | Card grid of featured projects with links. |
+| `BlogSection` | `src/components/BlogSection.tsx` | `#blog` | Preview cards for blog posts or articles. |
+| `ContactSection` | `src/components/ContactSection.tsx` | `#contact` | Contact form and social links. |
+
+<Columns cols={2}>
+  <Card title="HeroSection" icon="house" href="#section-components">
+    `#home` — Landing screen with name and CTA.
+  </Card>
+  <Card title="AboutSection" icon="user" href="#section-components">
+    `#about` — Bio and personal background.
+  </Card>
+  <Card title="SkillsSection" icon="code" href="#section-components">
+    No anchor — skill badges and proficiency display.
+  </Card>
+  <Card title="ExperienceSection" icon="briefcase" href="#section-components">
+    No anchor — work history timeline.
+  </Card>
+  <Card title="ProjectsSection" icon="folder" href="#section-components">
+    `#projects` — Featured project cards.
+  </Card>
+  <Card title="BlogSection" icon="newspaper" href="#section-components">
+    `#blog` — Article preview cards.
+  </Card>
+</Columns>
+
+## Navbar and Footer
+
+`src/components/Navbar.tsx` is a fixed navigation bar that sits at the top of the viewport. Key characteristics:
+
+- **Positioning** — fixed at `top-4`, centered horizontally, rendered as a pill-shaped container with a glassmorphism background (backdrop blur + translucent fill).
+- **`navLinks` array** — an internal array that maps each section label to its anchor href (e.g., `{ label: "Home", href: "#home" }`). Edit this array to add, remove, or rename navigation items.
+- **Mobile menu toggle** — on small viewports the horizontal link list collapses and a hamburger button reveals a dropdown menu. The open/closed state is tracked with a local `useState` boolean (`isOpen`) toggled by the button's `onClick` handler.
+
+`src/components/Footer.tsx` is the site footer rendered below all sections. It contains:
+
+- **Marquee strip** — a full-width scrolling text band (`animate-marquee`) displaying `vaishali · let's build ·` repeated four times. The text uses the `.marquee-text` outlined-stroke style.
+- **Social icons row** — four icon links (GitHub, LinkedIn, Twitter, Instagram) using Lucide icons. Each renders as a `glass` circle button. The `href` values are placeholder `"#"` — update them in the `socials` array at the top of `Footer.tsx`.
+- **Copyright line** — `made with ♡ by vaishali · © 2026` with the `Heart` icon filled in `text-pop`.
+
+## Page composition in `Index.tsx`
+
+`src/pages/Index.tsx` assembles the full portfolio by rendering every section component in document order:
+
+```tsx src/pages/Index.tsx
+import Navbar from "@/components/Navbar";
+import HeroSection from "@/components/HeroSection";
+import AboutSection from "@/components/AboutSection";
+import SkillsSection from "@/components/SkillsSection";
+import ExperienceSection from "@/components/ExperienceSection";
+import ProjectsSection from "@/components/ProjectsSection";
+import BlogSection from "@/components/BlogSection";
+import ContactSection from "@/components/ContactSection";
+import Footer from "@/components/Footer";
+
+const Index = () => (
+  <div className="min-h-screen">
+    <Navbar />
+    <HeroSection />
+    <AboutSection />
+    <SkillsSection />
+    <ExperienceSection />
+    <ProjectsSection />
+    <BlogSection />
+    <ContactSection />
+    <Footer />
+  </div>
+);
+
+export default Index;
+```
+
+To reorder sections, change the render order here. To add a new section, create a component in `src/components/`, import it in `Index.tsx`, and add a corresponding entry to the `navLinks` array in `Navbar.tsx`.
+
+## shadcn/ui primitives (`src/components/ui/`)
+
+The `ui/` subdirectory contains unstyled Radix UI primitives wrapped with Tailwind classes, generated by the [shadcn/ui](https://ui.shadcn.com) CLI. The project includes the following primitives:
+
+| Primitive | Radix package |
+|---|---|
+| Accordion | `@radix-ui/react-accordion` |
+| Alert Dialog | `@radix-ui/react-alert-dialog` |
+| Avatar | `@radix-ui/react-avatar` |
+| Checkbox | `@radix-ui/react-checkbox` |
+| Dialog | `@radix-ui/react-dialog` |
+| Dropdown Menu | `@radix-ui/react-dropdown-menu` |
+| Hover Card | `@radix-ui/react-hover-card` |
+| Navigation Menu | `@radix-ui/react-navigation-menu` |
+| Popover | `@radix-ui/react-popover` |
+| Progress | `@radix-ui/react-progress` |
+| Radio Group | `@radix-ui/react-radio-group` |
+| Select | `@radix-ui/react-select` |
+| Slider | `@radix-ui/react-slider` |
+| Switch | `@radix-ui/react-switch` |
+| Tabs | `@radix-ui/react-tabs` |
+| Toast / Toaster | `@radix-ui/react-toast` |
+| Tooltip | `@radix-ui/react-tooltip` |
+
+<Warning>
+Do not edit files inside `src/components/ui/` manually. They are managed by the shadcn CLI. To update a component or add a new one, run `npx shadcn add <component>` and commit the generated file.
+</Warning>
+
+To add a new shadcn component:
+
+```bash
+npx shadcn add badge
+```
+
+The CLI writes the component file to `src/components/ui/badge.tsx` and updates `components.json` accordingly.

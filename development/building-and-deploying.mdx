@@ -1,0 +1,143 @@
+---
+title: "Build and deploy Vaishali Visions"
+description: "How to run a production build of Vaishali Visions and deploy the static output to Vercel, Netlify, or GitHub Pages, including SPA routing notes."
+---
+
+Vaishali Visions is a fully static single-page application. The build output is a directory of HTML, JS, and CSS files that can be served from any static host.
+
+## Building for production
+
+Run the production build to compile, minify, and tree-shake the application into the `dist/` directory:
+
+<CodeGroup>
+
+```bash npm
+npm run build
+```
+
+```bash bun
+bun run build
+```
+
+</CodeGroup>
+
+Vite runs `tsc` for type checking, then bundles with Rollup. The output goes to `dist/` by default.
+
+## Previewing the production build locally
+
+Before deploying, serve the `dist/` folder locally to verify the production bundle behaves correctly:
+
+<CodeGroup>
+
+```bash npm
+npm run preview
+```
+
+```bash bun
+bun run preview
+```
+
+</CodeGroup>
+
+This starts a local static server pointing at `dist/`. It is not a dev server — HMR is not active.
+
+## Development build
+
+To produce a build that uses development mode (no minification, includes source maps, runs with `NODE_ENV=development`):
+
+<CodeGroup>
+
+```bash npm
+npm run build:dev
+```
+
+```bash bun
+bun run build:dev
+```
+
+</CodeGroup>
+
+Use this to debug production-only issues without sacrificing readable source output.
+
+---
+
+## Deploying to Vercel
+
+Vercel auto-detects Vite projects. The simplest path is to import the repository from the Vercel dashboard.
+
+**Using the Vercel CLI:**
+
+```bash
+npm i -g vercel
+vercel
+```
+
+Vercel infers the correct build command (`vite build`) and output directory (`dist`) automatically. No additional configuration is required.
+
+**Manual project settings** (if auto-detection fails):
+
+| Setting | Value |
+|---|---|
+| Build command | `npm run build` |
+| Output directory | `dist` |
+| Install command | `npm install` |
+
+## Deploying to Netlify
+
+**Using the Netlify CLI:**
+
+```bash
+npm i -g netlify-cli
+netlify deploy --dir=dist --prod
+```
+
+**Manual deploy via drag-and-drop:**
+
+1. Run `npm run build` locally.
+2. Open the Netlify dashboard and navigate to your site's **Deploys** tab.
+3. Drag the `dist/` folder onto the deploy drop zone.
+
+For continuous deployment, connect the repository in the Netlify dashboard and set:
+
+| Setting | Value |
+|---|---|
+| Build command | `npm run build` |
+| Publish directory | `dist` |
+
+## Deploying to GitHub Pages
+
+GitHub Pages serves files from a branch or a folder. Because Vaishali Visions uses client-side routing (`BrowserRouter`), you need to set a `base` path in `vite.config.ts` that matches your repository name.
+
+**1. Add the `base` option to `vite.config.ts`:**
+
+```typescript vite.config.ts
+export default defineConfig(({ mode }) => ({
+  base: "/vaishali-visions/",   // replace with your repository name
+  server: {
+    host: "::",
+    port: 8080,
+  },
+  // ... rest of config
+}));
+```
+
+**2. Build and push the `dist/` folder to the `gh-pages` branch:**
+
+```bash
+npm run build
+npx gh-pages -d dist
+```
+
+`gh-pages` is a utility that pushes a directory to the `gh-pages` branch. Install it with `npm install -D gh-pages` if needed.
+
+**3. Enable GitHub Pages** in your repository's **Settings → Pages**, selecting `gh-pages` as the source branch.
+
+<Tip>
+Vercel and Netlify handle SPA routing automatically — they serve `index.html` for any unmatched path, which lets React Router take over client-side. GitHub Pages does not do this by default. The standard workaround is to copy `dist/index.html` to `dist/404.html` before deploying; GitHub Pages serves `404.html` for unknown paths, which hands control back to the React app.
+
+```bash
+cp dist/index.html dist/404.html
+```
+
+Run this after `npm run build` and before pushing to `gh-pages`.
+</Tip>

@@ -1,0 +1,113 @@
+---
+title: "Add social links and contact information"
+description: "How to wire up real social media links in Vaishali Visions: convert the navbar sticker, update footer icons, and replace the stub contact form handler."
+---
+
+Out of the box, Vaishali Visions ships with placeholder text wherever links would go — the "open to projects" sticker in the navbar is a `<span>`, and the contact form submits to an `alert()` rather than a real email service. This guide shows you how to wire up real URLs, centralize your social links in one file, and replace the stub form handler with a production-ready service.
+
+## Convert the navbar sticker to a mailto link
+
+In `src/components/Navbar.tsx`, the availability sticker is a non-interactive `<span>`:
+
+```tsx src/components/Navbar.tsx
+<span className="sticker text-foreground">
+  <Sparkles size={12} className="text-pop animate-wiggle" />
+  open to projects
+</span>
+```
+
+Replace the `<span>` with an `<a>` tag to make it a clickable mailto link:
+
+```tsx src/components/Navbar.tsx
+<a href="mailto:you@example.com" className="sticker text-foreground hover:bg-pop/20 transition-colors">
+  <Sparkles size={12} className="text-pop animate-wiggle" />
+  open to projects
+</a>
+```
+
+The same `<span>` also appears in the mobile drawer — update both occurrences.
+
+## Centralize your links in a constants file
+
+Rather than scattering URLs across multiple components, create a single source of truth at `src/lib/constants.ts`:
+
+```ts src/lib/constants.ts
+export const SOCIAL_LINKS = {
+  github: "https://github.com/yourusername",
+  linkedin: "https://linkedin.com/in/yourusername",
+  twitter: "https://twitter.com/yourusername",
+  email: "you@example.com",
+};
+```
+
+Import this object wherever you need a URL:
+
+```tsx src/components/ContactSection.tsx
+import { SOCIAL_LINKS } from "@/lib/constants";
+```
+
+## Replace the stub form handler with a real email service
+
+The contact form in `src/components/ContactSection.tsx` currently calls `alert()` on submit:
+
+```tsx src/components/ContactSection.tsx
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  alert("yay! thanks for reaching out — i'll get back to you soon ♡");
+  setForm({ name: "", email: "", message: "" });
+};
+```
+
+Replace the `alert()` with a `fetch` call to [Formspree](https://formspree.io) or [EmailJS](https://www.emailjs.com). The example below uses Formspree:
+
+```tsx src/components/ContactSection.tsx
+import { SOCIAL_LINKS } from "@/lib/constants";
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  const res = await fetch(`https://formspree.io/f/${import.meta.env.VITE_FORMSPREE_ID}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: form.name,
+      email: form.email,
+      message: form.message,
+      _replyto: SOCIAL_LINKS.email,
+    }),
+  });
+  if (res.ok) {
+    alert("yay! thanks for reaching out — i'll get back to you soon ♡");
+    setForm({ name: "", email: "", message: "" });
+  }
+};
+```
+
+<Tip>
+  Store your Formspree form ID or EmailJS service key in a `.env` file (e.g., `VITE_FORMSPREE_ID=abc123`) and access it via `import.meta.env.VITE_FORMSPREE_ID`. Never commit API keys directly to source code — add `.env` to your `.gitignore`.
+</Tip>
+
+## Update footer social icons
+
+`src/components/Footer.tsx` renders four social icon links from a `socials` array. All `href` values default to `"#"`. Replace them with your real profile URLs:
+
+```tsx src/components/Footer.tsx
+const socials = [
+  { icon: Github,    href: "https://github.com/yourusername",           label: "GitHub" },
+  { icon: Linkedin,  href: "https://linkedin.com/in/yourusername",      label: "LinkedIn" },
+  { icon: Twitter,   href: "https://twitter.com/yourusername",          label: "Twitter" },
+  { icon: Instagram, href: "https://instagram.com/yourusername",        label: "Instagram" },
+];
+```
+
+If you centralize your links in `src/lib/constants.ts` (see above), import them here:
+
+```tsx src/components/Footer.tsx
+import { SOCIAL_LINKS } from "@/lib/constants";
+
+const socials = [
+  { icon: Github,    href: SOCIAL_LINKS.github,    label: "GitHub" },
+  { icon: Linkedin,  href: SOCIAL_LINKS.linkedin,  label: "LinkedIn" },
+  { icon: Twitter,   href: SOCIAL_LINKS.twitter,   label: "Twitter" },
+  { icon: Instagram, href: SOCIAL_LINKS.instagram, label: "Instagram" },
+];
+```

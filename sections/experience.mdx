@@ -1,0 +1,77 @@
+---
+title: "Experience section — work history timeline cards"
+description: "The ExperienceSection component: three glassmorphism cards for work history with role title, company, period sticker badge, and emoji anchor."
+keywords: ["experience", "work history", "timeline", "glassmorphism", "hover-lift"]
+---
+
+The `ExperienceSection` component displays a vertical stack of glassmorphism cards, one for each role in the work history. Each card shows an emoji, job title, company name, period sticker, and a short description. Cards lift on hover and animate in on scroll.
+
+## Experience entries
+
+The `experiences` array at the top of `ExperienceSection.tsx` defines all three entries:
+
+```ts
+const experiences = [
+  {
+    title:   "Senior Full-Stack Developer",
+    company: "TechNova Solutions",
+    period:  "2023 — now",
+    desc:    "leading enterprise SaaS builds, architecting scalable microservices, and mentoring the next wave of devs.",
+    emoji:   "✨",
+  },
+  {
+    title:   "Frontend Developer",
+    company: "PixelCraft Studio",
+    period:  "2021 — 2023",
+    desc:    "shipped responsive web apps in React + TypeScript. boosted performance by 40% with code splitting & lazy loading.",
+    emoji:   "🌷",
+  },
+  {
+    title:   "Junior Developer",
+    company: "CodeBridge Inc.",
+    period:  "2020 — 2021",
+    desc:    "built RESTful APIs and contributed to the company design system. learned to love the messy middle.",
+    emoji:   "🌱",
+  },
+];
+```
+
+## Card layout
+
+Each card is a `glass rounded-[2rem] hover-lift` div. Inside:
+
+- **Emoji** — large `text-3xl` span on the left
+- **Title** — `font-serif text-2xl md:text-3xl` heading
+- **Company** — `text-pop text-sm font-medium` paragraph below the title
+- **Period sticker** — a `sticker font-script text-base` span aligned to the top-right of the header row
+- **Description** — `text-muted-foreground leading-relaxed` paragraph, indented with `pl-12` to align with the title (clearing the emoji)
+
+The header row uses `flex flex-wrap items-start justify-between` so the period sticker wraps below the title block on narrow screens.
+
+## Scroll reveal stagger
+
+Cards animate in on scroll with a staggered delay:
+
+```tsx
+style={{ transitionDelay: `${0.15 * (i + 1)}s` }}
+```
+
+Card 1 enters at 0.15 s, card 2 at 0.30 s, card 3 at 0.45 s.
+
+## How to update experience entries
+
+Edit the `experiences` array in `ExperienceSection.tsx`. Each entry accepts these fields:
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `title` | `string` | Job title, rendered in serif font |
+| `company` | `string` | Company name, rendered in `text-pop` |
+| `period` | `string` | Date range shown in the sticker badge |
+| `desc` | `string` | One or two sentence description |
+| `emoji` | `string` | Single emoji used as a visual anchor |
+
+To add a new role, insert a new object into the array. The component maps over the array, so no template changes are needed.
+
+<Note>
+The stack is ordered chronologically descending — most recent first. Maintain that order when inserting new entries.
+</Note>

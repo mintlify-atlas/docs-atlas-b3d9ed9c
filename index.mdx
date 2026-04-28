@@ -1,133 +1,79 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
-icon: 'star'
+title: "Vaishali Visions: Portfolio docs for a full-stack dreamer"
+description: "Documentation for Vaishali Visions — a dreamy, animated personal portfolio built with React, TypeScript, and Tailwind CSS."
 ---
 
-## Setting up
+Vaishali Visions is a personal portfolio and creative showcase built with React 18, TypeScript, Vite, and Tailwind CSS. It features a soft lavender-peach aesthetic, glassmorphism cards, scroll-reveal animations, and seven fully designed sections — from a hero banner to a contact form. These docs cover every section, how to customize the design, and how to run and deploy the project.
 
-Get your documentation site up and running in minutes.
-
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
-
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={2}>
+  <Card title="Introduction" icon="sparkles" href="/introduction">
+    Learn what Vaishali Visions is, its tech stack, and what makes it unique.
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="Getting started" icon="rocket" href="/getting-started">
+    Clone the repo, install dependencies, and launch the dev server in minutes.
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+  <Card title="Portfolio sections" icon="layout" href="/sections/hero">
+    Explore every section of the portfolio — hero, about, skills, experience, projects, blog, and contact.
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="Customization" icon="palette" href="/customization/colors-and-typography">
+    Swap colors, fonts, animations, and layout to make the portfolio your own.
   </Card>
-</Columns>
+</CardGroup>
 
-## Create beautiful pages
+## Quick start
 
-Everything you need to create world-class documentation.
+<Steps>
+  <Step title="Clone the repository">
+    ```bash
+    git clone https://github.com/gladis-git-bit/vaishali-visions.git
+    cd vaishali-visions
+    ```
+  </Step>
+  <Step title="Install dependencies">
+    <CodeGroup>
+    ```bash npm
+    npm install
+    ```
+    ```bash bun
+    bun install
+    ```
+    </CodeGroup>
+  </Step>
+  <Step title="Start the dev server">
+    <CodeGroup>
+    ```bash npm
+    npm run dev
+    ```
+    ```bash bun
+    bun run dev
+    ```
+    </CodeGroup>
+    Open [http://localhost:5173](http://localhost:5173) in your browser.
+  </Step>
+  <Step title="Personalize your content">
+    Edit the component files in `src/components/` to update your name, bio, projects, and more. See the [Customization guides](/customization/updating-content) for details.
+  </Step>
+</Steps>
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+## What's inside
 
-## Make your content agent ready
-
-Make your docs work for humans and AI agents alike.
-
-<Columns cols={2}>
-  <Card
-    title="Prompt component"
-    icon="robot"
-    href="/agent-ready/prompt"
-  >
-    Embed shareable AI prompts readers can copy or open in Cursor.
+<CardGroup cols={3}>
+  <Card title="Hero section" icon="house" href="/sections/hero">
+    Animated intro with floating blobs, decorative stickers, and CTA buttons.
   </Card>
-  <Card
-    title="Visibility"
-    icon="eye"
-    href="/agent-ready/visibility"
-  >
-    Show different content to humans and agents reading your docs.
+  <Card title="Skills and toolkit" icon="wrench" href="/sections/skills">
+    Color-coded badges for dev and design technologies.
   </Card>
-  <Card
-    title="Contextual menu"
-    icon="bolt"
-    href="/agent-ready/contextual"
-  >
-    Give readers one-click access to Claude, ChatGPT, Cursor, and more.
+  <Card title="Projects gallery" icon="grid" href="/sections/projects">
+    Gradient cards showcasing featured work with tech stack tags.
   </Card>
-  <Card
-    title="AI coding tools"
-    icon="wand-magic-sparkles"
-    href="/ai-tools/claude-code"
-  >
-    Set up Claude Code, Cursor, or Windsurf with Mintlify's skill.
+  <Card title="Experience timeline" icon="briefcase" href="/sections/experience">
+    Work history cards with company, role, and period details.
   </Card>
-</Columns>
-
-## Need inspiration?
-
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+  <Card title="Blog and journal" icon="book-open" href="/sections/blog">
+    Article cards with category tags, dates, and read-time estimates.
+  </Card>
+  <Card title="Contact form" icon="envelope" href="/sections/contact">
+    Service offerings list and a styled contact form with validation.
+  </Card>
+</CardGroup>

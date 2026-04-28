@@ -1,0 +1,102 @@
+---
+title: "Contact section — form and services showcase"
+description: "The ContactSection component: three service offering cards (mobile dev, UI/UX, consulting), a controlled form with useState, and a stub submit handler."
+keywords: ["contact", "form", "services", "EmailJS", "Formspree", "handleSubmit"]
+---
+
+The `ContactSection` component combines a services sidebar with a controlled contact form. Visitors can see what Vaishali offers at a glance, then fill in the form to start a conversation. The section uses the `useScrollReveal` hook and renders on a `bg-gradient-soft` background.
+
+## Service cards
+
+The `services` array defines three offering entries displayed in the left column (2 of 5 grid columns on `md`):
+
+```ts
+const services = [
+  { icon: Smartphone,    label: "mobile development",  color: "bg-primary/20 text-primary"          },
+  { icon: Palette,       label: "ui/ux design",        color: "bg-pop/20 text-pop"                  },
+  { icon: MessageSquare, label: "technical consulting", color: "bg-accent/30 text-accent-foreground" },
+];
+```
+
+Each service renders as a `glass rounded-2xl hover-lift` row containing a `w-10 h-10 rounded-xl` icon container and a `text-sm font-medium` label.
+
+Below the service list is a glassmorphism aside card with the script note:
+
+> p.s. coffee chats are always free ☕
+
+## Contact form
+
+The form occupies the right column (3 of 5 grid columns). It is a controlled component backed by a single state object:
+
+```tsx
+const [form, setForm] = useState({ name: "", email: "", message: "" });
+```
+
+### Fields
+
+| Field | Type | Required | Placeholder |
+|-------|------|----------|-------------|
+| name | `text` | yes | `hi, i'm…` |
+| email | `email` | yes | `you@dreamy.com` |
+| message | `textarea` (5 rows) | yes | `the project, the vibe, the timeline… spill it all ♡` |
+
+Each input uses `bg-white/60 border border-white/80 rounded-2xl` with a `focus:ring-2 focus:ring-pop/40` focus ring.
+
+### Submission handler
+
+```tsx
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  alert("yay! thanks for reaching out — i'll get back to you soon ♡");
+  setForm({ name: "", email: "", message: "" });
+};
+```
+
+`handleSubmit` prevents the default form submission, shows a browser `alert`, then resets all three fields to empty strings. No data is sent anywhere in the current implementation.
+
+## Wiring up a real email backend
+
+Replace the `alert` in `handleSubmit` with a call to an email delivery service. Two common options:
+
+<CodeGroup>
+```tsx EmailJS
+import emailjs from "@emailjs/browser";
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  await emailjs.send(
+    "YOUR_SERVICE_ID",
+    "YOUR_TEMPLATE_ID",
+    { name: form.name, email: form.email, message: form.message },
+    "YOUR_PUBLIC_KEY"
+  );
+  setForm({ name: "", email: "", message: "" });
+};
+```
+
+```tsx Formspree
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  await fetch("https://formspree.io/f/YOUR_FORM_ID", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(form),
+  });
+  setForm({ name: "", email: "", message: "" });
+};
+```
+</CodeGroup>
+
+<Note>
+Add loading and error states when integrating a real backend so users get feedback if the request fails.
+</Note>
+
+## Customizing services
+
+Edit the `services` array at the top of `ContactSection.tsx`. Each entry accepts:
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `icon` | Lucide icon component | Rendered at `size={16}` inside the colored container |
+| `label` | `string` | Service name displayed next to the icon |
+| `color` | `string` | Tailwind classes for the icon container background and text |

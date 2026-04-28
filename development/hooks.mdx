@@ -1,0 +1,174 @@
+---
+title: "Custom hooks — useScrollReveal and use-mobile"
+description: "Documentation for the two custom React hooks in Vaishali Visions: useScrollReveal for scroll animations and useIsMobile for responsive logic."
+---
+
+Vaishali Visions ships two custom hooks in `src/hooks/`. Both are small, single-purpose utilities with no external dependencies beyond React.
+
+## `useScrollReveal`
+
+**File:** `src/hooks/useScrollReveal.ts`
+
+Tracks whether an element has scrolled into the viewport using the browser's `IntersectionObserver` API. Once the element becomes visible, the observer unregisters itself — the element stays visible and no further callbacks fire.
+
+### Signature
+
+```typescript
+function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
+  threshold?: number  // default: 0.15
+): { ref: React.RefObject<T>; isVisible: boolean }
+```
+
+**Parameters**
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `threshold` | `number` | `0.15` | Fraction of the element that must be visible before `isVisible` flips to `true`. Range: `0`–`1`. |
+
+**Return value**
+
+| Property | Type | Description |
+|---|---|---|
+| `ref` | `React.RefObject<T>` | Attach to the DOM element you want to observe. |
+| `isVisible` | `boolean` | `false` initially, `true` once the element crosses the threshold. Never resets to `false`. |
+
+### Source
+
+```typescript src/hooks/useScrollReveal.ts
+import { useEffect, useRef, useState } from "react";
+
+export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(threshold = 0.15) {
+  const ref = useRef<T>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  return { ref, isVisible };
+}
+```
+
+### Usage example
+
+All section components use `useScrollReveal` the same way. The `ref` is attached to the container, and `isVisible` toggles the `visible` class that triggers the CSS transitions defined in `src/index.css`:
+
+```tsx src/components/AboutSection.tsx
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+
+const AboutSection = () => {
+  const { ref, isVisible } = useScrollReveal();
+
+  return (
+    <section ref={ref} className={`scroll-reveal ${isVisible ? "visible" : ""}`}>
+      {/* child elements use scroll-reveal-child with staggered transitionDelay */}
+      <div className="scroll-reveal-child" style={{ transitionDelay: "0.1s" }}>
+        {/* content */}
+      </div>
+    </section>
+  );
+};
+```
+
+When `isVisible` becomes `true`, the `visible` class is added to the `scroll-reveal` container, which triggers CSS transitions on all `.scroll-reveal-child` descendants as defined in `src/index.css`.
+
+---
+
+## `useIsMobile`
+
+**File:** `src/hooks/use-mobile.tsx`
+
+Returns a boolean indicating whether the current viewport width is below the mobile breakpoint. Updates in real time as the user resizes the browser window.
+
+### Signature
+
+```typescript
+function useIsMobile(): boolean
+```
+
+**Return value**
+
+`true` when `window.innerWidth < 768`, `false` otherwise. Returns `false` during server-side rendering (initial state is `undefined`, which coerces to `false` via `!!`).
+
+### Source
+
+```tsx src/hooks/use-mobile.tsx
+import * as React from "react";
+
+const MOBILE_BREAKPOINT = 768;
+
+export function useIsMobile() {
+  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined);
+
+  React.useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const onChange = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    };
+    mql.addEventListener("change", onChange);
+    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  return !!isMobile;
+}
+```
+
+The hook listens to a `MediaQueryList` change event rather than `window.resize`, which is more efficient because the browser fires it only when the query boundary is crossed, not on every pixel of resize.
+
+### Usage example
+
+```tsx src/components/Navbar.tsx
+import { useIsMobile } from "@/hooks/use-mobile";
+
+export default function Navbar() {
+  const isMobile = useIsMobile();
+
+  return (
+    <nav>
+      {isMobile ? (
+        <MobileMenu />
+      ) : (
+        <DesktopLinks />
+      )}
+    </nav>
+  );
+}
+```
+
+---
+
+## Using both hooks together
+
+You can combine the two hooks in a single component. A common pattern is to apply different reveal thresholds depending on the device:
+
+```tsx
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useIsMobile } from "@/hooks/use-mobile";
+
+const ProjectsSection = () => {
+  const isMobile = useIsMobile();
+  // Use a lower threshold on mobile so elements reveal sooner
+  const { ref, isVisible } = useScrollReveal(isMobile ? 0.05 : 0.15);
+
+  return (
+    <section ref={ref} className={`scroll-reveal ${isVisible ? "visible" : ""}`}>
+      {/* project cards using scroll-reveal-child */}
+    </section>
+  );
+};
+```

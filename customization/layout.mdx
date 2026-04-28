@@ -1,0 +1,181 @@
+---
+title: "Layout system — grid, spacing, and responsive breakpoints"
+description: "Understand the Vaishali Visions layout utilities: section-padding, container width, responsive grid columns, and glassmorphism classes."
+---
+
+Vaishali Visions uses a combination of Tailwind utilities and a small set of custom CSS classes to handle page structure. The section spacing, container behavior, card rounding, and glassmorphism surfaces are all defined in `src/index.css` and `tailwind.config.ts`. Understanding these pieces lets you respace sections, widen the layout, or adapt the grid for different screen sizes without touching component markup.
+
+## Section padding
+
+The `.section-padding` utility class applies consistent vertical and horizontal padding to every major page section. It uses Tailwind's responsive prefix syntax directly inside a `@layer utilities` rule.
+
+```css src/index.css
+.section-padding {
+  @apply py-24 md:py-32 px-5 md:px-8;
+}
+```
+
+This compiles to:
+- `padding-top: 6rem` / `padding-bottom: 6rem` on mobile
+- `padding-top: 8rem` / `padding-bottom: 8rem` at the `md` breakpoint (768 px and above)
+- `padding-left: 1.25rem` / `padding-right: 1.25rem` on mobile
+- `padding-left: 2rem` / `padding-right: 2rem` at `md`
+
+Add `.section-padding` to any `<section>` element to match the site's rhythm.
+
+## Container configuration
+
+The Tailwind container is centered and padded globally via `tailwind.config.ts`. A custom `2xl` breakpoint caps the maximum content width.
+
+```ts tailwind.config.ts
+container: {
+  center: true,
+  padding: "1.25rem",
+  screens: {
+    "2xl": "1400px",
+  },
+},
+```
+
+| Setting | Value | Effect |
+|---|---|---|
+| `center` | `true` | Adds `margin-left: auto; margin-right: auto` automatically |
+| `padding` | `"1.25rem"` | Applies 1.25 rem (20 px) horizontal padding inside the container |
+| `2xl` screen | `1400px` | The container maxes out at 1400 px on very wide viewports |
+
+<Note>
+The `2xl` breakpoint here is a container-width ceiling, not a general breakpoint override. Other Tailwind breakpoints (`sm`, `md`, `lg`, `xl`) retain their default values.
+</Note>
+
+## Border radius
+
+The global `--radius` token controls the default rounding used by shadcn/ui components like buttons, dialogs, and inputs.
+
+```css src/index.css
+--radius: 1.5rem;
+```
+
+This is mapped to Tailwind's `borderRadius` scale in `tailwind.config.ts`:
+
+```ts tailwind.config.ts
+borderRadius: {
+  lg: "var(--radius)",              // 1.5rem
+  md: "calc(var(--radius) - 6px)", // 1.25rem
+  sm: "calc(var(--radius) - 12px)", // 0.75rem
+},
+```
+
+Cards throughout the site use the more generous `rounded-[2rem]` arbitrary value directly in Tailwind class names to exceed the `lg` level and produce a pronounced pill-like silhouette.
+
+## Glassmorphism utility classes
+
+Two utility classes implement frosted-glass layering effects, used on the navigation bar, floating cards, and modal-like surfaces.
+
+```css src/index.css
+.glass {
+  background: hsl(0 0% 100% / 0.55);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid hsl(0 0% 100% / 0.6);
+}
+
+.glass-dark {
+  background: hsl(270 25% 18% / 0.04);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border: 1px solid hsl(270 30% 50% / 0.08);
+}
+```
+
+| Class | Background opacity | Blur | Use case |
+|---|---|---|---|
+| `.glass` | 55% white | `blur(20px) saturate(180%)` | Navbar, light-mode overlays |
+| `.glass-dark` | 4% dark purple | `blur(16px) saturate(150%)` | Subtle dark surface insets |
+
+<Info>
+`backdrop-filter` requires the element's background to be semi-transparent to have a visible blurring effect. If you set `background` to a fully opaque color, the blur will be masked. The `-webkit-backdrop-filter` duplicate ensures Safari compatibility.
+</Info>
+
+## Responsive grid layouts
+
+Different sections of the site use different grid column configurations tuned for their content density.
+
+| Section | Grid classes | Layout intent |
+|---|---|---|
+| About | `md:grid-cols-5` | 5-column asymmetric split (e.g., 2-col text / 3-col image) |
+| Projects | `sm:grid-cols-2 lg:grid-cols-3` | 1 col on mobile, 2 on tablet, 3 on desktop |
+| Blog | `md:grid-cols-2 lg:grid-cols-3` | 1 col on mobile, 2 at `md`, 3 at `lg` |
+
+All grids use `gap-*` utilities defined inline in each component for spacing between cards.
+
+## Shadow utilities
+
+Three shadow variables provide a tiered depth system. All three are applied via matching Tailwind utility classes.
+
+```css src/index.css
+--shadow-soft: 0 20px 60px -20px hsl(335 60% 70% / 0.25), 0 8px 20px -8px hsl(268 50% 60% / 0.15);
+--shadow-glow: 0 0 50px hsl(335 85% 80% / 0.45);
+--shadow-card: 0 4px 24px -8px hsl(270 30% 50% / 0.12);
+```
+
+| Variable | Utility class | Character |
+|---|---|---|
+| `--shadow-soft` | `.shadow-soft` | Long, diffuse pink-lavender shadow; used on hover-lifted cards |
+| `--shadow-glow` | `.glow-primary` | Radial hot-pink bloom; used on hero images and primary CTAs |
+| `--shadow-card` | `.shadow-card` | Tight, low-contrast card drop shadow for resting state |
+
+## Sticker utility
+
+The `.sticker` class styles pill-shaped label badges used throughout the site for tags, status indicators, and section labels.
+
+```css src/index.css
+.sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: hsl(0 0% 100% / 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid hsl(0 0% 100% / 0.8);
+  box-shadow: 0 4px 12px -4px hsl(335 60% 70% / 0.2);
+}
+```
+
+The full-radius `9999px` produces a pill shape at any width. The frosted background and drop shadow give it visual lift without relying on a solid color fill.
+
+## Squiggle underline decoration
+
+The `.squiggle-underline` class adds a hand-drawn SVG wavy line beneath text using a CSS background-image data URI.
+
+```css src/index.css
+.squiggle-underline {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 8'><path d='M0 4 Q 10 0 20 4 T 40 4 T 60 4 T 80 4' stroke='%23E89B7C' stroke-width='2.5' fill='none' stroke-linecap='round'/></svg>");
+  background-repeat: repeat-x;
+  background-position: 0 100%;
+  background-size: 80px 8px;
+  padding-bottom: 8px;
+}
+```
+
+The SVG uses a quadratic bezier path tiled horizontally at `80px` intervals. The stroke color `%23E89B7C` is URL-encoded hex for `#E89B7C`, a warm peach that matches the `--accent` palette. To change the squiggle color, replace `%23E89B7C` with the URL-encoded hex value of your target color (e.g., `%23` followed by the six-character hex code).
+
+## Marquee text style
+
+The `.marquee-text` class renders text as an outlined stroke with a transparent fill, used for large scrolling display text in the marquee sections.
+
+```css src/index.css
+.marquee-text {
+  -webkit-text-stroke: 1.5px hsl(var(--foreground) / 0.85);
+  color: transparent;
+  font-family: 'DM Serif Display', serif;
+}
+```
+
+The `-webkit-text-stroke` property draws a 1.5 px outline using `--foreground` at 85% opacity, while `color: transparent` removes the fill, leaving only the outline. This is a widely supported CSS property in modern browsers despite the `-webkit-` prefix.
+
+<Warning>
+`-webkit-text-stroke` does not have a non-prefixed standard equivalent that works cross-browser. It is broadly supported in all modern browsers, but avoid relying on it for body text where legibility is critical — it is best reserved for large decorative display sizes (48 px and above).
+</Warning>

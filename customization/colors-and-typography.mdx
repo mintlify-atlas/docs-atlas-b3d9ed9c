@@ -1,0 +1,210 @@
+---
+title: "Customize colors and typography in Vaishali Visions"
+description: "How to change the lavender-peach palette, swap Google Fonts, and adjust the CSS custom property and Tailwind token system in Vaishali Visions."
+---
+
+Vaishali Visions uses a CSS custom property system — every color in the UI traces back to a HSL variable defined in `:root` inside `src/index.css`. Tailwind then reads those variables through `hsl(var(--token))` mappings in `tailwind.config.ts`, so changing one CSS variable automatically propagates to every utility class that references it.
+
+## Color tokens
+
+All palette values live in the `:root` block at the top of `src/index.css`. The table below lists every semantic token, its default HSL value, and what part of the UI it controls.
+
+| Variable | HSL value | Purpose |
+|---|---|---|
+| `--background` | `30 40% 96%` | Page background (warm off-white) |
+| `--foreground` | `270 25% 18%` | Default body text |
+| `--card` | `0 0% 100%` | Card surface |
+| `--card-foreground` | `270 25% 18%` | Text on cards |
+| `--popover` | `0 0% 100%` | Popover/dropdown surface |
+| `--popover-foreground` | `270 25% 18%` | Text in popovers |
+| `--primary` | `268 60% 70%` | Lavender — buttons, links, active states |
+| `--primary-foreground` | `0 0% 100%` | Text on primary-colored surfaces |
+| `--primary-glow` | `285 75% 82%` | Soft glow halo around primary elements |
+| `--secondary` | `45 80% 92%` | Soft butter cream — secondary buttons, badges |
+| `--secondary-foreground` | `270 25% 25%` | Text on secondary surfaces |
+| `--muted` | `30 30% 92%` | Muted backgrounds (subtle sections) |
+| `--muted-foreground` | `270 12% 45%` | Placeholder and secondary text |
+| `--accent` | `18 90% 75%` | Peach — hover highlights, decorative accents |
+| `--accent-foreground` | `270 30% 20%` | Text on accent-colored surfaces |
+| `--sage` | `145 35% 75%` | Sage green — tertiary moments, tags |
+| `--sage-foreground` | `270 25% 20%` | Text on sage surfaces |
+| `--pop` | `335 85% 72%` | Hot pink — high-energy highlights |
+| `--pop-foreground` | `0 0% 100%` | Text on pop surfaces |
+| `--destructive` | `0 75% 65%` | Error/destructive actions |
+| `--destructive-foreground` | `0 0% 100%` | Text on destructive surfaces |
+| `--border` | `30 25% 88%` | Default border color |
+| `--input` | `30 25% 90%` | Form input borders |
+| `--ring` | `268 60% 70%` | Focus ring (matches `--primary`) |
+
+## Changing the primary color
+
+The primary color is used for buttons, active navigation states, and focus rings. To change it, edit the `--primary` variable in `src/index.css`.
+
+<CodeGroup>
+
+```css Before — lavender
+:root {
+  --primary: 268 60% 70%;
+  --primary-foreground: 0 0% 100%;
+  --primary-glow: 285 75% 82%;
+}
+```
+
+```css After — teal
+:root {
+  --primary: 180 60% 50%;
+  --primary-foreground: 0 0% 100%;
+  --primary-glow: 180 65% 72%;
+}
+```
+
+</CodeGroup>
+
+<Note>
+The `--ring` variable is set to `268 60% 70%` by default — the same hue as `--primary`. Update it alongside `--primary` so focus outlines stay visually consistent.
+</Note>
+
+## Gradient variables
+
+Four gradient variables compose the visual atmosphere of the site. They are used via Tailwind utility classes (`.bg-gradient-primary`, `.bg-gradient-soft`, `.bg-gradient-hero`, `.text-gradient`).
+
+```css src/index.css
+--gradient-primary: linear-gradient(135deg, hsl(268 70% 78%), hsl(335 85% 80%) 50%, hsl(18 90% 80%));
+--gradient-soft: linear-gradient(135deg, hsl(45 80% 94%), hsl(18 80% 92%) 50%, hsl(285 60% 94%));
+--gradient-hero: radial-gradient(ellipse at 20% 10%, hsl(335 85% 88% / 0.6), transparent 50%),
+                 radial-gradient(ellipse at 80% 20%, hsl(268 70% 88% / 0.55), transparent 50%),
+                 radial-gradient(ellipse at 60% 90%, hsl(45 90% 85% / 0.6), transparent 55%),
+                 linear-gradient(180deg, hsl(30 40% 97%), hsl(30 50% 95%));
+--gradient-text: linear-gradient(135deg, hsl(268 60% 60%), hsl(335 80% 65%) 60%, hsl(18 85% 65%));
+```
+
+| Variable | Utility class | Where it appears |
+|---|---|---|
+| `--gradient-primary` | `.bg-gradient-primary` | Bold section backgrounds, CTA blocks |
+| `--gradient-soft` | `.bg-gradient-soft` | Subtle card and section fills |
+| `--gradient-hero` | `.bg-gradient-hero` | Hero section full-bleed background |
+| `--gradient-text` | `.text-gradient` | Gradient-filled display text |
+
+<Tip>
+To shift all gradients toward a cooler palette, update the HSL hue values. For example, replacing the `335` (hot pink) stops with `210` (cool blue) gives a more minimal, corporate feel without touching the base color tokens.
+</Tip>
+
+## Typography
+
+Three typefaces are loaded from Google Fonts via a single `@import` at line 1 of `src/index.css`.
+
+```css src/index.css
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;600&display=swap');
+```
+
+| Font | Weights loaded | Applied to |
+|---|---|---|
+| **DM Serif Display** | regular, italic | `h1`, `h2`, `h3`, `.font-serif-display`, `.marquee-text` |
+| **Inter** | 300, 400, 500, 600, 700 | `body` (default for all text) |
+| **Caveat** | 400, 600 | `.font-script` (handwritten decorative text) |
+
+The assignments are made in `src/index.css`:
+
+```css src/index.css
+body {
+  font-family: 'Inter', sans-serif;
+  font-feature-settings: 'ss01', 'cv11';
+}
+
+h1, h2, h3 {
+  font-family: 'DM Serif Display', serif;
+  letter-spacing: -0.02em;
+}
+```
+
+And mirrored in `tailwind.config.ts` so you can use `font-sans`, `font-serif`, and `font-script` utilities directly in JSX:
+
+```ts tailwind.config.ts
+fontFamily: {
+  sans: ["Inter", "sans-serif"],
+  serif: ["DM Serif Display", "serif"],
+  script: ["Caveat", "cursive"],
+},
+```
+
+## Swapping a Google Font
+
+<Steps>
+  <Step title="Choose a replacement">
+    Visit [fonts.google.com](https://fonts.google.com) and copy the `@import` URL for your chosen font, selecting the weights you need.
+  </Step>
+  <Step title="Update the import in index.css">
+    Replace the existing `@import` at the top of `src/index.css`. For example, to swap DM Serif Display for Playfair Display:
+
+    ```css src/index.css
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;600&display=swap');
+    ```
+  </Step>
+  <Step title="Update fontFamily in tailwind.config.ts">
+    Change the matching entry under `theme.extend.fontFamily`:
+
+    ```ts tailwind.config.ts
+    fontFamily: {
+      sans: ["Inter", "sans-serif"],
+      serif: ["Playfair Display", "serif"],  // updated
+      script: ["Caveat", "cursive"],
+    },
+    ```
+  </Step>
+  <Step title="Update the CSS rule in index.css">
+    Update the `font-family` declaration for `h1, h2, h3` to match:
+
+    ```css src/index.css
+    h1, h2, h3 {
+      font-family: 'Playfair Display', serif;
+      letter-spacing: -0.02em;
+    }
+    ```
+  </Step>
+</Steps>
+
+<Warning>
+The `font-feature-settings: 'ss01', 'cv11'` applied to `body` are Inter-specific OpenType features. Remove or replace them if you swap Inter for a different sans-serif, as other fonts may not support those feature tags.
+</Warning>
+
+## Tailwind color tokens
+
+Every color token in `tailwind.config.ts` resolves to `hsl(var(--token))`, binding the Tailwind class system to the CSS custom properties above. This means all Tailwind color utilities (`bg-primary`, `text-accent`, `border-sage`, etc.) automatically reflect any changes you make to the `:root` variables.
+
+```ts tailwind.config.ts
+colors: {
+  primary: {
+    DEFAULT: "hsl(var(--primary))",
+    foreground: "hsl(var(--primary-foreground))",
+    glow: "hsl(var(--primary-glow))",
+  },
+  secondary: {
+    DEFAULT: "hsl(var(--secondary))",
+    foreground: "hsl(var(--secondary-foreground))",
+  },
+  destructive: {
+    DEFAULT: "hsl(var(--destructive))",
+    foreground: "hsl(var(--destructive-foreground))",
+  },
+  muted: {
+    DEFAULT: "hsl(var(--muted))",
+    foreground: "hsl(var(--muted-foreground))",
+  },
+  accent: {
+    DEFAULT: "hsl(var(--accent))",
+    foreground: "hsl(var(--accent-foreground))",
+  },
+  sage: {
+    DEFAULT: "hsl(var(--sage))",
+    foreground: "hsl(var(--sage-foreground))",
+  },
+  pop: {
+    DEFAULT: "hsl(var(--pop))",
+    foreground: "hsl(var(--pop-foreground))",
+  },
+},
+```
+
+<Info>
+`primary.glow` (`hsl(var(--primary-glow))`) is an extra token not present in most shadcn/ui setups. It drives the soft aura effect on hero imagery and primary buttons via the `.glow-primary` utility class (`box-shadow: var(--shadow-glow)`).
+</Info>

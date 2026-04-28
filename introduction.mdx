@@ -1,0 +1,59 @@
+---
+title: "Vaishali Visions: dreamy full-stack portfolio starter"
+description: "Vaishali Visions is a React + TypeScript single-page portfolio with glassmorphism, scroll animations, and a soft lavender-peach design system."
+---
+
+Vaishali Visions is a single-page portfolio application built with React 18, TypeScript, and Vite. It ships a cohesive dreamy aesthetic — glassmorphism cards with frosted-glass backdrops, animated floating blobs, and a soft lavender-peach-butter color system anchored by a lavender primary (`hsl(268 60% 70%)`, approximately `#c084e8`), a peach accent, and a hot-pink pop color for high-contrast moments. The app is organized into seven distinct sections — Hero, About, Skills, Experience, Projects, Blog, and Contact — that scroll into view with CSS-driven reveal animations. The component library is built on Radix UI primitives via shadcn/ui, with TanStack Query managing client state, React Router DOM handling in-app routing, and Recharts for any data visualizations. Styles are written in Tailwind CSS, and the three typefaces — DM Serif Display for headings, Inter for body text, and Caveat for handwritten script accents — are loaded from Google Fonts.
+
+## Sections
+
+<CardGroup cols={3}>
+  <Card title="Hero" icon="star" href="/sections/hero">
+    Full-viewport opening section with animated blobs, gradient headline, and primary call-to-action.
+  </Card>
+  <Card title="About" icon="user" href="/sections/about">
+    Personal introduction with glassmorphism card layout and scroll-reveal entrance.
+  </Card>
+  <Card title="Skills" icon="wrench" href="/sections/skills">
+    Color-coded pill badges organized into dev and design skill groups.
+  </Card>
+  <Card title="Experience" icon="briefcase" href="/sections/experience">
+    Timeline of work history rendered with hover-lift cards and squiggle-underline accents.
+  </Card>
+  <Card title="Projects" icon="folder" href="/sections/projects">
+    Project showcase cards with glassmorphism styling and external links.
+  </Card>
+  <Card title="Blog" icon="book-open" href="/sections/blog">
+    Article preview cards with category tint badges, date, and read-time metadata.
+  </Card>
+  <Card title="Contact" icon="mail" href="/sections/contact">
+    Controlled contact form with three service offering cards and a submission handler.
+  </Card>
+</CardGroup>
+
+## Key technologies
+
+<CardGroup cols={3}>
+  <Card title="React 18" icon="react" href="https://react.dev">
+    UI library powering the component tree, with concurrent rendering and `QueryClientProvider` wrapping the app.
+  </Card>
+  <Card title="TypeScript" icon="code" href="https://www.typescriptlang.org">
+    Full static typing across components, hooks, and configuration files.
+  </Card>
+  <Card title="Tailwind CSS" icon="palette" href="https://tailwindcss.com">
+    Utility-first CSS with a custom design token layer for colors, radii, gradients, and shadows.
+  </Card>
+  <Card title="Vite" icon="zap" href="https://vitejs.dev">
+    Build tool and dev server using the SWC-based React plugin for fast HMR and optimized production bundles.
+  </Card>
+  <Card title="shadcn/ui" icon="layers" href="https://ui.shadcn.com">
+    Accessible component primitives built on Radix UI, including dialogs, tooltips, toasts, and more.
+  </Card>
+  <Card title="TanStack Query" icon="database" href="https://tanstack.com/query">
+    Client-side async state management with `QueryClient` configured at the app root.
+  </Card>
+</CardGroup>
+
+<Note>
+  Vaishali Visions is a client-side only SPA — there is no backend or API. All data is static or managed locally in the browser. No server, database, or API endpoint is required to run the project.
+</Note>

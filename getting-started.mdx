@@ -1,0 +1,98 @@
+---
+title: "Get started with Vaishali Visions"
+description: "Learn how to clone, install, and run the Vaishali Visions portfolio locally using npm or bun — no backend or environment variables required."
+---
+
+Getting Vaishali Visions running locally takes less than five minutes. You will clone the repository, install dependencies with either npm or bun, and start Vite's development server. No environment variables, no database, and no backend setup are required — the app is entirely client-side.
+
+<Steps>
+  <Step title="Prerequisites">
+    You need **Node.js 18 or later** and **git** installed on your machine. Confirm your Node.js version before proceeding:
+
+    ```bash
+    node --version
+    ```
+
+    The output should show `v18.0.0` or higher. If it does not, download the latest LTS release from [nodejs.org](https://nodejs.org).
+  </Step>
+
+  <Step title="Clone the repository">
+    Clone the project and move into the directory:
+
+    ```bash
+    git clone https://github.com/gladis-git-bit/vaishali-visions.git && cd vaishali-visions
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    Install all project dependencies:
+
+    <CodeGroup>
+
+    ```bash npm
+    npm install
+    ```
+
+    ```bash bun
+    bun install
+    ```
+
+    </CodeGroup>
+  </Step>
+
+  <Step title="Start the dev server">
+    Start the Vite development server:
+
+    <CodeGroup>
+
+    ```bash npm
+    npm run dev
+    ```
+
+    ```bash bun
+    bun run dev
+    ```
+
+    </CodeGroup>
+
+    The server starts at **http://localhost:8080**. Open that URL in your browser to see the portfolio.
+  </Step>
+
+  <Step title="Build for production">
+    When you are ready to produce a deployable build, run:
+
+    <CodeGroup>
+
+    ```bash npm
+    npm run build
+    ```
+
+    ```bash bun
+    bun run build
+    ```
+
+    </CodeGroup>
+
+    Vite outputs the optimized static assets to the `dist/` directory. Serve the contents of `dist/` from any static hosting provider.
+  </Step>
+</Steps>
+
+## Available scripts
+
+| Script | Command | Description |
+|--------|---------|-------------|
+| `dev` | `npm run dev` | Start the Vite development server at `http://localhost:8080`. |
+| `build` | `npm run build` | Compile and bundle for production into `dist/`. |
+| `build:dev` | `npm run build:dev` | Build in development mode, preserving source maps and debug output. |
+| `lint` | `npm run lint` | Run ESLint across the project using the flat config. |
+| `preview` | `npm run preview` | Serve the production `dist/` build locally for final verification. |
+| `test` | `npm run test` | Run the Vitest test suite once. |
+| `test:watch` | `npm run test:watch` | Run Vitest in watch mode, re-running tests on file changes. |
+
+<Tip>
+  Use **bun** for noticeably faster installs. Bun resolves and installs the full dependency tree in a fraction of the time npm takes, which is especially noticeable on first install given the large Radix UI dependency set.
+</Tip>
+
+<Note>
+  Vite HMR (Hot Module Replacement) is enabled in the dev server. Any edit you save to a file under `src/` is reflected in the browser instantly without a full page reload.
+</Note>

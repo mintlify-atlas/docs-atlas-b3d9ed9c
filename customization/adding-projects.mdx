@@ -1,0 +1,82 @@
+---
+title: "Add and remove projects from the portfolio gallery"
+description: "Learn how to add, remove, or reorder project entries in the Vaishali Visions gallery using the projects data array in ProjectsSection.tsx."
+---
+
+The portfolio gallery in Vaishali Visions is driven by a plain JavaScript array called `projects` at the top of `src/components/ProjectsSection.tsx`. Every card you see on screen is rendered by mapping over that array, so adding, removing, or reordering projects requires only editing that one array — no database, no API, no extra configuration.
+
+## The projects array
+
+Here is the full array from the source file, with all six entries:
+
+```tsx src/components/ProjectsSection.tsx
+const projects = [
+  { title: "E-Commerce Platform", desc: "modern e-comm with real-time inventory, payments, and a dreamy admin dashboard.", tags: ["React", "Node.js", "PostgreSQL"], gradient: "from-pop/40 to-primary/30", emoji: "🛍️" },
+  { title: "AI Chat Application", desc: "an intelligent chatbot interface powered by ML & natural language magic.", tags: ["Next.js", "Python", "OpenAI"], gradient: "from-primary/40 to-accent/40", emoji: "🤖" },
+  { title: "Task Management App", desc: "a collaborative project tool with real-time updates and team features.", tags: ["TypeScript", "Firebase", "Tailwind"], gradient: "from-accent/40 to-sage/40", emoji: "✅" },
+  { title: "Portfolio Generator", desc: "a tool that helps devs spin up stunning portfolio sites in minutes.", tags: ["React", "Framer Motion", "MDX"], gradient: "from-sage/40 to-primary/40", emoji: "🎨" },
+  { title: "Health & Fitness Tracker", desc: "mobile-first fitness tracking with charts, goals, and social bits.", tags: ["React Native", "GraphQL", "MongoDB"], gradient: "from-primary/40 to-pop/40", emoji: "🌿" },
+  { title: "Social Media Dashboard", desc: "analytics dashboard for managing & tracking social performance.", tags: ["Vue.js", "D3.js", "Express"], gradient: "from-pop/40 to-accent/40", emoji: "📊" },
+];
+```
+
+## Shape of each object
+
+Each entry in the array is a plain object with five fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `title` | `string` | Project name, displayed as the card heading in `font-serif`. |
+| `desc` | `string` | Short description shown below the title. One to two sentences works best. |
+| `tags` | `string[]` | Tech stack pills rendered in the card footer. Three tags is the visual sweet spot. |
+| `gradient` | `string` | Tailwind gradient classes applied to the card thumbnail background. |
+| `emoji` | `string` | Single emoji rendered large in the center of the thumbnail. |
+
+## Adding a new project
+
+Append a new object to the end of the array (or insert it at any position to control display order):
+
+```tsx src/components/ProjectsSection.tsx
+{ title: "Design System", desc: "a reusable component library with dark mode, tokens, and Storybook docs.", tags: ["React", "Storybook", "CSS Tokens"], gradient: "from-accent/40 to-pop/40", emoji: "🧩" },
+```
+
+The grid layout is `sm:grid-cols-2 lg:grid-cols-3`, so a seventh card will start a new row at the large breakpoint. Remove one of the existing entries if you want the grid to stay in even rows of three.
+
+## Gradient tokens
+
+The gradient strings use Tailwind's `bg-gradient-to-br` utility combined with the custom color tokens defined in `tailwind.config.ts`. The available tokens are:
+
+| Token | Description |
+|-------|-------------|
+| `pop` | Brand pink — high contrast, playful |
+| `primary` | Soft lavender — the primary brand tone |
+| `accent` | Warm peach or amber tint |
+| `sage` | Muted green — calm and earthy |
+
+Combine any two using the pattern `from-{token}/{opacity} to-{token}/{opacity}`. The existing cards use `/40` and `/30` for a translucent pastel look that works on both light and dark backgrounds.
+
+## Removing the "coming soon" sticker
+
+Every card thumbnail currently displays a `coming soon` sticker in the top-right corner. This is a static `<span>` inside the thumbnail `<div>`:
+
+```tsx src/components/ProjectsSection.tsx
+<span className="absolute top-3 right-3 sticker text-[10px]">
+  <Sparkles size={10} className="text-pop" />
+  coming soon
+</span>
+```
+
+To remove it globally, delete those three lines. To remove it from individual cards only, move the sticker inside the `projects.map` callback and render it conditionally based on a `live` boolean field you add to each project object:
+
+```tsx src/components/ProjectsSection.tsx
+// Add a `live` field to the objects you have deployed:
+{ title: "E-Commerce Platform", ..., live: true },
+
+// Then in the JSX:
+{!project.live && (
+  <span className="absolute top-3 right-3 sticker text-[10px]">
+    <Sparkles size={10} className="text-pop" />
+    coming soon
+  </span>
+)}
+```
